@@ -21,32 +21,31 @@ def dateRanges(startDate: str, endDate: str, rangeSize: int = 30):
             >>> dateRanges("2020-02-25", "2020-08-24", 90)
         """
 
-    # Converte as strings de data em objetos datetime
+    ranges = []
+
+    # Convert date strings to datetime objects
     inicio = datetime.strptime(startDate, '%Y-%m-%d')
     fim = datetime.strptime(endDate, '%Y-%m-%d')
 
-    # Define um intervalo
+    # Define an interval
     one_month = timedelta(days=rangeSize)
 
-    # Define a data atual como a data de início
+    # Define the current date as the starting date
     data_atual = inicio
 
-    # Inicializa a lista de ranges
-    ranges = []
-
-    # Loop enquanto a data atual for menor ou igual à data final
+    # Loop while the current date is lesser or equal the final date
     while data_atual <= fim:
-        # Define a data de início e fim do intervalo atual
+        # Define the start and end date of the current interval
         inicio_intervalo = data_atual
         fim_intervalo = min(data_atual + one_month - timedelta(days=1), fim)
 
-        # Adiciona o intervalo à lista de ranges
+        # Add the interval to the ranges list
         ranges.append((inicio_intervalo.strftime('%Y-%m-%d'), fim_intervalo.strftime('%Y-%m-%d')))
 
-        # Adiciona um mês à data atual
+        # Add a month to the current date
         data_atual += one_month
 
-    # Retorna a lista de ranges
+    # Return the ranges list
     return ranges
 
 
