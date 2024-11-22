@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='PyMultiHelper',
-    version='1.1.11',
+    version='1.1.13',
     packages=find_packages(),
     description='Several common helpers for Python coding',
     author='Anderson',
@@ -16,6 +16,8 @@ setup(
     install_requires=[
         "requests~=2.32.3",
         "pytz~=2024.2",
-        "pandas~=2.2.3"
+        "pandas~=2.2.3",
+        "speedtest-cli~=2.1.3",
+        "beautifulsoup4~=4.12.3"
     ]
 )

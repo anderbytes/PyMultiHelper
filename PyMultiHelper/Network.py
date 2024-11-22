@@ -3,7 +3,7 @@ import time
 import requests
 
 
-def sameHost(hostname: str, verbose: bool = False) -> bool:
+def sameHost(hostname: str) -> bool:
     """
     Checks if the current host's external IP address matches the IP address of a given domain or subdomain.
 

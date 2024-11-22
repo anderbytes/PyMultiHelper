@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from typing import Pattern
 from urllib.parse import urlparse
-import json
+
 
 def matchesRegex(string: str,
                  regex: str | Pattern) -> bool:
@@ -254,3 +254,56 @@ def isValidIP(ipAddress: str) -> bool:
     elif re.match(ipv6Pattern, ipAddress):
         return True
     return False
+
+
+import os
+import json
+
+
+def findParameterValue(paramName: str,
+                       JSONConfigFile=None,
+                       allowEnvFallback=True) -> str:
+    """
+    Retrieve a configuration value by searching in a JSON file or in environment variables.
+
+    Args:
+        paramName (str): The name of the configuration key to search for.
+        JSONConfigFile (str, optional): Path to a JSON file containing configuration data.
+        allowEnvFallback (bool): If True, fallback to environment variables if the key is not found in the JSON file.
+
+    Raises:
+        ValueError: If no configuration source is provided or both sources are disabled.
+        FileNotFoundError: If the JSON file is provided but not found.
+        ValueError: If the JSON file is provided but has an invalid format.
+        KeyError: If the configuration key is not found in the JSON file or environment variables.
+
+    Returns:
+        str: The configuration value.
+    """
+    # Validate input: At least one source must be provided
+    if not JSONConfigFile and not allowEnvFallback:
+        raise ValueError("No configuration source provided. Specify a JSONConfigFile or enable allowEnvFallback.")
+
+    # Load configuration from JSON file if provided
+    config_data = {}
+    if JSONConfigFile:
+        try:
+            with open(JSONConfigFile, "r") as file:
+                config_data = json.load(file)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Configuration file not found: {JSONConfigFile}")
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid JSON format in configuration file: {JSONConfigFile}")
+
+    # Check in JSON file first
+    if paramName in config_data:
+        return str(config_data[paramName])
+
+    # Fallback to environment variable if allowed and key not found in JSON
+    if allowEnvFallback:
+        env_value = os.getenv(paramName)
+        if env_value:
+            return str(env_value)
+
+    # If not found, raise an exception
+    raise KeyError(f"Configuration key not found: {paramName}")

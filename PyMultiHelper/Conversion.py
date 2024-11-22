@@ -191,3 +191,29 @@ def OBJLISTtoCSV(data: List[Any], outputFile: str, separator: str = ',') -> None
         writer = csv.DictWriter(file, fieldnames=field_names, delimiter=separator)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def chunksProcess(
+        items: list,
+        chunkSize: int,
+        function: callable
+):
+    """
+    Processes a list of items in chunks, applying a callback to each chunk.
+
+    Args:
+        items (list): The list of items to be processed.
+        chunkSize (int): The maximum size of each chunk.
+        function (callable): The function to be applied to each chunk.
+                             It should accept a list as its only parameter.
+
+    Raises:
+        ValueError: If chunkSize is less than or equal to zero.
+    """
+
+    if chunkSize <= 0:
+        raise ValueError("chunkSize must be greater than zero.")
+
+    for i in range(0, len(items), chunkSize):
+        chunk = items[i:i + chunkSize]
+        function(chunk)
