@@ -262,14 +262,14 @@ import json
 
 def findParameterValue(paramName: str,
                        JSONConfigFile=None,
-                       allowEnvFallback=True) -> str:
+                       searchEnvVars=True) -> str:
     """
     Retrieve a configuration value by searching in a JSON file or in environment variables.
 
     Args:
         paramName (str): The name of the configuration key to search for.
         JSONConfigFile (str, optional): Path to a JSON file containing configuration data.
-        allowEnvFallback (bool): If True, fallback to environment variables if the key is not found in the JSON file.
+        searchEnvVars (bool): Tries to find Parameter in Env Variables (after JSON, if given).
 
     Raises:
         ValueError: If no configuration source is provided or both sources are disabled.
@@ -281,8 +281,8 @@ def findParameterValue(paramName: str,
         str: The configuration value.
     """
     # Validate input: At least one source must be provided
-    if not JSONConfigFile and not allowEnvFallback:
-        raise ValueError("No configuration source provided. Specify a JSONConfigFile or enable allowEnvFallback.")
+    if not JSONConfigFile and not searchEnvVars:
+        raise ValueError("No configuration source provided. Specify a JSONConfigFile or enable searchEnvVars.")
 
     # Load configuration from JSON file if provided
     config_data = {}
@@ -300,7 +300,7 @@ def findParameterValue(paramName: str,
         return str(config_data[paramName])
 
     # Fallback to environment variable if allowed and key not found in JSON
-    if allowEnvFallback:
+    if searchEnvVars:
         env_value = os.getenv(paramName)
         if env_value:
             return str(env_value)

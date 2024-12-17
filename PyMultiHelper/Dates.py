@@ -172,3 +172,24 @@ def calculateAge(birthDate: date) -> int:
     today = date.today()
     age = today.year - birthDate.year - ((today.month, today.day) < (birthDate.month, birthDate.day))
     return age
+
+def hoursMinsAgo(sourceDateTime: datetime, hoursAgoText: str = "hours ago", minutesAgoText: str = "minutes ago") -> str:
+    """
+    Returns a human-readable time difference in either hours or minutes
+    between the current time and the provided datetime.
+
+    Args:
+        sourceDateTime (datetime): The datetime to compare to the current time.
+        hoursAgoText (str): The text showed as 'hours ago' template
+        minutesAgoText (str): The text showed as 'minutes ago' template
+
+    Returns:
+        str: A string indicating the time difference in hours or minutes (e.g., "5 hours ago" or "30 minutes ago").
+    """
+    delta_seconds = int((datetime.now() - sourceDateTime).total_seconds())
+    hours = delta_seconds // 3600
+    if hours > 0:
+        return f"{hours} {hoursAgoText}"
+    else:
+        minutes = delta_seconds // 60
+        return f"{minutes} {minutesAgoText}"
